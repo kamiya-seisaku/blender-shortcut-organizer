@@ -1,21 +1,16 @@
-f# Blender Shortcut Organizer Addon
-# MIT License
-
-# Import Blender Python API
-import bpy
-
-# Description
 __bl_info__ = {
     "name": "Blender Shortcut Organizer",
     "description": "Simplifies the management of shortcuts in Blender.",
-    "author": "Your Name",
+    "author": "kkay",
     "version": (1, 0),
-    "blender": (2, 93, 0),
+    "blender": (3, 6, 2),
     "location": "View3D > Tool Shelf > Shortcut Organizer",
     "warning": "",
-    "wiki_url": "",
+    "doc_url": "",
     "category": "3D View"
 }
+
+import bpy
 
 # Main Class for the Addon
 class ShortcutOrganizer(bpy.types.Operator):
@@ -47,13 +42,14 @@ class ShortcutOrganizer(bpy.types.Operator):
     def finalize_assignment(self, key):
         # Code for finalizing assignment
 
-# Register and Unregister Functions
+# Registration
+
 def register():
     bpy.utils.register_class(ShortcutOrganizer)
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
 
-# Main Execution
+
 if __name__ == "__main__":
     register()
