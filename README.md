@@ -1,5 +1,5 @@
 # Blender Shortcut Organizer Addon
-
+test from local addon folder
 ## Description
 This Blender Shortcut Organizer is designed to streamline the process of assigning and organizing shortcuts within Blender. With an intuitive UI, users can easily assign, reassign, and manage their shortcuts, ensuring a more efficient workflow.
 

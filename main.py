@@ -1,4 +1,4 @@
-# Blender Shortcut Organizer Addon
+f# Blender Shortcut Organizer Addon
 # MIT License
 
 # Import Blender Python API

@@ -1,4 +1,4 @@
-# Ignore Blender temporary files
+gi# Ignore Blender temporary files
 *.blend1
 *.blend2
 
