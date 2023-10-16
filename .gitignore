@@ -1,0 +1,27 @@
+# Ignore Blender temporary files
+*.blend1
+*.blend2
+
+# Ignore compiled Python files
+__pycache__/
+*.py[cod]
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore operating system files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Ignore Blender user-specific files
+userpref.blend
+
+# Ignore any logs or debug files
+*.log
+*.dbg
+
+# Ignore build or packaging directories
+/build/
+/dist/
+*.egg-info/
