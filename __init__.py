@@ -2,6 +2,7 @@ bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
     "version": (1, 0),
+    "blender": (3, 6, 0),
     "blender": (2, 80, 0),
     "location": "View3D > Tool Shelf > Shortcut Organizer",
     "description": "Simplifies the management of shortcuts in Blender",
