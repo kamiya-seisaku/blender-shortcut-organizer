@@ -22,6 +22,14 @@ class HelloWorldPopupOperator(bpy.types.Operator):
     bl_idname = "object.hello_world_popup"
     bl_label = "Hello World Popup"
 
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="Hello World")
+        layout.operator("object.reload_addon", text="Reload Addon")
+
     def execute(self, context):
         self.report({'INFO'}, "Hello World")
         return {'FINISHED'}
@@ -83,6 +91,9 @@ class HelloWorldPanel(bpy.types.Panel):
         # Conditionally show Reload Addon button
         if context.scene.debug_mode:
             layout.operator("object.reload_addon", text="Reload Addon")
+
+        # Add button to trigger HelloWorldPopupOperator
+        layout.operator("object.hello_world_popup", text="Show Hello World")
 
 # New Reload Addon Operator
 class ReloadAddonOperator(bpy.types.Operator):
