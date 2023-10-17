@@ -3,7 +3,6 @@ bl_info = {
     "author": "kkay",
     "version": (1, 0),
     "blender": (3, 6, 0),
-    "blender": (2, 80, 0),
     "location": "View3D > Tool Shelf > Shortcut Organizer",
     "description": "Simplifies the management of shortcuts in Blender",
     "warning": "",
@@ -27,34 +26,53 @@ class ShortcutOrganizer(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         # UI elements go here
-    
+        pass
+
     # Direct Assignment
     def assign_shortcut(self, button):
         # Code for direct assignment
+        pass
     
     # Shortcut Input Prompt
     def input_prompt(self):
         # Code for input prompt
+        pass
     
     # Conflict Resolution
     def resolve_conflict(self, key):
         # Code for conflict resolution
+        pass
     
     # Alternative Suggestions
     def suggest_alternatives(self, key):
         # Code for alternative suggestions
+        pass
     
     # Final Assignment
     def finalize_assignment(self, key):
         # Code for finalizing assignment
+        pass
+
+# New Panel class for the mock window
+class HelloWorldPanel(bpy.types.Panel):
+    bl_label = "Hello World"
+    bl_idname = "OBJECT_PT_hello_world"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "object"
+
+    def draw(self, context):
+        self.layout.label(text="Hello World")
 
 # Registration
 
 def register():
     bpy.utils.register_class(ShortcutOrganizer)
+    bpy.utils.register_class(HelloWorldPanel)
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
+    bpy.utils.unregister_class(HelloWorldPanel)
 
 
 if __name__ == "__main__":
