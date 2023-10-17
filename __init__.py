@@ -17,6 +17,15 @@ import bpy
 # from bpy_extras.object_utils import AddObjectHelper, object_data_add
 # from mathutils import Vector
 
+# New Popup Window Operator
+class HelloWorldPopupOperator(bpy.types.Operator):
+    bl_idname = "object.hello_world_popup"
+    bl_label = "Hello World Popup"
+
+    def execute(self, context):
+        self.report({'INFO'}, "Hello World")
+        return {'FINISHED'}
+
 # Main Class for the Addon
 class ShortcutOrganizer(bpy.types.Operator):
     bl_idname = "object.shortcut_organizer"
@@ -59,8 +68,11 @@ class HelloWorldPanel(bpy.types.Panel):
     bl_idname = "OBJECT_PT_hello_world"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
+    # bl_space_type = 'VIEW_3D'
+    # bl_region_type = 'UI'
+    bl_category = "Object"
     bl_context = "object"
-
+ 
     def draw(self, context):
         layout = self.layout  # Define layout here
         layout.label(text="Hello World")
@@ -78,18 +90,24 @@ class ReloadAddonOperator(bpy.types.Operator):
     bl_label = "Reload Addon"
 
     def execute(self, context):
-        bpy.ops.preferences.addon_disable(module="your_addon_module_name")
-        bpy.ops.preferences.addon_enable(module="your_addon_module_name")
+        bpy.ops.preferences.addon_disable(module="blender-shortcut-organizer")
+        bpy.ops.preferences.addon_enable(module="blender-shortcut-organizer")
         return {'FINISHED'}
 
 # Registration
 
 def register():
+    # ... rest of your code
     bpy.utils.register_class(ShortcutOrganizer)
     bpy.utils.register_class(HelloWorldPanel)
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
     bpy.utils.register_class(ReloadAddonOperator)
-    bpy.utils.register_class(ReloadAddonOperator)  # Register the new class
+
+    try:
+        bpy.utils.unregister_class(HelloWorldPopupOperator)
+    except:
+        pass  # Class is not registered
+    bpy.utils.register_class(HelloWorldPopupOperator)  # Register the new Popup Operator
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
