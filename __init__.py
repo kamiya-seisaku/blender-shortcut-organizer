@@ -22,7 +22,6 @@ bl_info = {
     "category": "3D View",
 }
 
-
 import bpy
 # from bpy.types import Operator
 # from bpy.props import FloatVectorProperty
