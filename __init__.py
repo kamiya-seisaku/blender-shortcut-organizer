@@ -1,3 +1,15 @@
+# Blender Shortcut Organizer Addon
+# by kkay 2023/oct-
+## Description
+# This Blender Shortcut Organizer is designed to streamline the process of assigning and organizing shortcuts within Blender. With an intuitive UI, users can easily assign, reassign, and manage their shortcuts, ensuring a more efficient workflow.
+## Features
+# - **Intuitive UI**: A visually clear and easy-to-navigate interface for managing shortcuts.
+# - **Direct Assignment**: Right-click on any Blender button to assign a shortcut directly.
+# - **Shortcut Input Prompt**: Users are prompted to input their desired key or key combination.
+# - **Conflict Resolution**: Displays functions already assigned with key/combination specified by the user.  User can chose to override or use one of the alternative key/strokes.
+# - **Alternative Suggestions**: Provides unassigned key strokes similar to the chosen one for alternative assignments.
+# - **Final Assignment**: Allows users to finalize their preferred shortcut after considering conflicts and suggestions.
+
 bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
@@ -19,7 +31,7 @@ import bpy
 
 # New Popup Window Operator
 class HelloWorldPopupOperator(bpy.types.Operator):
-    bl_idname = "object.hello_world_popup"
+    bl_idname = "object.Shortcut_organizer_popup"
     bl_label = "Hello World Popup"
 
     def invoke(self, context, event):
@@ -71,9 +83,10 @@ class ShortcutOrganizer(bpy.types.Operator):
         pass
 
 # New Panel class for the mock window
-class HelloWorldPanel(bpy.types.Panel):
-    bl_label = "Hello World"
-    bl_idname = "OBJECT_PT_hello_world"
+class ShortcutOrganizerPanel(bpy.types.Panel):
+    bl_idname = "object.ShortcutOrganizerPanel"
+    bl_label = "Shortcut Organizer Panel"
+    # bl_idname = "OBJECT_PT_hello_world"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     # bl_space_type = 'VIEW_3D'
@@ -83,7 +96,7 @@ class HelloWorldPanel(bpy.types.Panel):
  
     def draw(self, context):
         layout = self.layout  # Define layout here
-        layout.label(text="Hello World")
+        layout.label(text="Shortcut Organizer")
 
         # Add Debug Mode checkbox
         layout.prop(context.scene, "debug_mode", text="Debug Mode")
@@ -93,7 +106,11 @@ class HelloWorldPanel(bpy.types.Panel):
             layout.operator("object.reload_addon", text="Reload Addon")
 
         # Add button to trigger HelloWorldPopupOperator
-        layout.operator("object.hello_world_popup", text="Show Hello World")
+        layout.operator("object.Shortcut_organizer_popup", text="Popup")
+
+# Append popup to Context menu
+def add_context_menu(self, context):
+    self.layout.operator('object.Shortcut_organizer_popup')
 
 # New Reload Addon Operator
 class ReloadAddonOperator(bpy.types.Operator):
@@ -110,9 +127,10 @@ class ReloadAddonOperator(bpy.types.Operator):
 def register():
     # ... rest of your code
     bpy.utils.register_class(ShortcutOrganizer)
-    bpy.utils.register_class(HelloWorldPanel)
+    bpy.utils.register_class(ShortcutOrganizerPanel)
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
     bpy.utils.register_class(ReloadAddonOperator)
+    bpy.types.VIEW3D_MT_object_context_menu.append(add_context_menu)
 
     try:
         bpy.utils.unregister_class(HelloWorldPopupOperator)
@@ -122,8 +140,9 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
-    bpy.utils.unregister_class(HelloWorldPanel)
+    bpy.utils.unregister_class(ShortcutOrganizerPanel)
     bpy.utils.unregister_class(ReloadAddonOperator)  # Unregister the new class
+    bpy.types.VIEW3D_MT_object_context_menu.remove(add_context_menu)
 
 
 if __name__ == "__main__":
