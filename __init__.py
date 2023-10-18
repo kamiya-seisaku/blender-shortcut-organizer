@@ -1,4 +1,4 @@
-jk# Blender Shortcut Organizer Addon
+# Blender Shortcut Organizer Addon
 # by kkay 2023/oct-
 bl_info = {
     "name": "Blender Shortcut Organizer",
