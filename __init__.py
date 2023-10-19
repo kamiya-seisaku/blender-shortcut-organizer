@@ -27,7 +27,7 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Shortcut Organizer Popup")
+        layout.label(text="Press key to assign")
         layout.operator("object.reload_addon", text="Reload Addon")
 
     def execute(self, context):
@@ -46,7 +46,7 @@ class ShortcutOrganizer(bpy.types.Operator):
     # Todo: Functionality implementations
 
 # Panel class for the Property Window
-class ShortcutOrganizerPropertyPanel(bpy.types.Panel):
+class OBJECT_PT_ShortcutOrganizerPropertyPanel(bpy.types.Panel):
     bl_idname = "object.shortcut_organizer_property_panel"
     bl_label = "Shortcut Organizer"
     bl_space_type = 'PROPERTIES'
@@ -75,7 +75,7 @@ class ReloadAddonOperator(bpy.types.Operator):
 # Registration
 def register():
     bpy.utils.register_class(ShortcutOrganizer)
-    bpy.utils.register_class(ShortcutOrganizerPropertyPanel)
+    bpy.utils.register_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
     bpy.utils.register_class(ReloadAddonOperator)
     bpy.types.VIEW3D_MT_object_context_menu.append(add_context_menu)
@@ -88,7 +88,7 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
-    bpy.utils.unregister_class(ShortcutOrganizerPropertyPanel)
+    bpy.utils.unregister_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
     bpy.utils.unregister_class(ReloadAddonOperator)
     bpy.types.VIEW3D_MT_object_context_menu.remove(add_context_menu)
 
