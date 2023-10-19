@@ -1,0 +1,20 @@
+# Popup Window Operator
+class ShortcutOrganizerPopupOperator(bpy.types.Operator):
+    bl_idname = "object.shortcut_organizer_popup"
+    bl_label = "Shortcut Organizer Popup"
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None  # replace with your conditions
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="Shortcut Organizer Popup")
+        layout.operator("object.reload_addon", text="Reload Addon")
+
+    def execute(self, context):
+        self.report({'INFO'}, "Popup Opened")
+        return {'FINISHED'}
