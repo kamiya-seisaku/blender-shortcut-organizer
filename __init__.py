@@ -73,7 +73,6 @@ class OBJECT_PT_ShortcutOrganizerPropertyPanel(bpy.types.Panel):
         # layout.operator("object.shortcut_organizer_popup", text="Open Shortcut Organizer")
         layout = self.layout
         layout.label(text="Press key to assign")
-        layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
         layout.operator("object.reload_addon", text="Reload Addon")
         layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
@@ -109,7 +108,8 @@ def register():
     except:
         pass
     bpy.utils.register_class(ShortcutOrganizerPopupOperator)
-    bpy.utils.register_class(AssignKeyOperator)
+    if "AssignKeyOperator" not in bpy.types.classes:
+        bpy.utils.register_class(AssignKeyOperator)
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
@@ -117,7 +117,8 @@ def unregister():
     bpy.utils.unregister_class(ReloadAddonOperator)
     for menu_type in context_menu_types:
         getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
-    bpy.utils.unregister_class(AssignKeyOperator)
+    if "ShortcutOrganizer" in bpy.types.classes:
+        bpy.utils.unregister_class(ShortcutOrganizer)
 
 if __name__ == "__main__":
     register()
