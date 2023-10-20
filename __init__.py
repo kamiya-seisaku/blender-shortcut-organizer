@@ -12,6 +12,8 @@ bl_info = {
 
 import bpy
 
+context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
+
 # Popup Window Operator
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     bl_idname = "object.shortcut_organizer_popup"
@@ -78,7 +80,12 @@ def register():
     bpy.utils.register_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
     bpy.utils.register_class(ReloadAddonOperator)
-    bpy.types.VIEW3D_MT_object_context_menu.append(add_context_menu)
+    # bpy.types.VIEW3D_MT_object_context_menu.append(add_context_menu)
+
+    # Dynamically all from all context menus
+    for menu_type in context_menu_types:
+        getattr(bpy.types, menu_type, None).append(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
+        # bpy.types.get(menu_type).append(add_context_menu)
 
     try:
         bpy.utils.unregister_class(ShortcutOrganizerPopupOperator)
@@ -90,7 +97,10 @@ def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
     bpy.utils.unregister_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
     bpy.utils.unregister_class(ReloadAddonOperator)
-    bpy.types.VIEW3D_MT_object_context_menu.remove(add_context_menu)
+    # bpy.types.VIEW3D_MT_object_context_menu.remove(add_context_menu)
+    # Dynamically remove from all context menus
+    for menu_type in context_menu_types:
+        getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
 
 if __name__ == "__main__":
     register()
