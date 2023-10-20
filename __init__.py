@@ -108,7 +108,8 @@ def register():
     except:
         pass
     bpy.utils.register_class(ShortcutOrganizerPopupOperator)
-    if "AssignKeyOperator" not in bpy.types.classes:
+
+    if "AssignKeyOperator" not in dir(bpy.types):
         bpy.utils.register_class(AssignKeyOperator)
 
 def unregister():
@@ -117,7 +118,7 @@ def unregister():
     bpy.utils.unregister_class(ReloadAddonOperator)
     for menu_type in context_menu_types:
         getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
-    if "ShortcutOrganizer" in bpy.types.classes:
+    if "ShortcutOrganizer" in dir(bpy.types):
         bpy.utils.unregister_class(ShortcutOrganizer)
 
 if __name__ == "__main__":
