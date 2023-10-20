@@ -18,6 +18,7 @@ context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     bl_idname = "object.shortcut_organizer_popup"
     bl_label = "Shortcut Organizer Popup"
+    proposed_keys = bpy.props.StringProperty()
 
     @classmethod
     def poll(cls, context):
@@ -30,10 +31,21 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Press key to assign")
+        layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
         layout.operator("object.reload_addon", text="Reload Addon")
+        layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
     def execute(self, context):
         self.report({'INFO'}, "Popup Opened")
+        return {'FINISHED'}
+
+# Assign Key Operator
+class AssignKeyOperator(bpy.types.Operator):
+    bl_idname = "object.assign_key"
+    bl_label = "Assign Key"
+
+    def execute(self, context):
+        # Your code to assign the key stroke
         return {'FINISHED'}
 
 # Main Class for the Addon
@@ -49,16 +61,21 @@ class ShortcutOrganizer(bpy.types.Operator):
 
 # Panel class for the Property Window
 class OBJECT_PT_ShortcutOrganizerPropertyPanel(bpy.types.Panel):
-    bl_idname = "object.shortcut_organizer_property_panel"
+    bl_idname = "OBJECT_PT_ShortcutOrganizerPropertyPanel"
     bl_label = "Shortcut Organizer"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "object"
 
     def draw(self, context):
+        # layout = self.layout
+        # layout.label(text="Shortcut Organizer in Property Panel")
+        # layout.operator("object.shortcut_organizer_popup", text="Open Shortcut Organizer")
         layout = self.layout
-        layout.label(text="Shortcut Organizer in Property Panel")
-        layout.operator("object.shortcut_organizer_popup", text="Open Shortcut Organizer")
+        layout.label(text="Press key to assign")
+        layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
+        layout.operator("object.reload_addon", text="Reload Addon")
+        layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
 # Context menu to add Popup
 def add_context_menu(self, context):
@@ -92,15 +109,15 @@ def register():
     except:
         pass
     bpy.utils.register_class(ShortcutOrganizerPopupOperator)
+    bpy.utils.register_class(AssignKeyOperator)
 
 def unregister():
     bpy.utils.unregister_class(ShortcutOrganizer)
     bpy.utils.unregister_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
     bpy.utils.unregister_class(ReloadAddonOperator)
-    # bpy.types.VIEW3D_MT_object_context_menu.remove(add_context_menu)
-    # Dynamically remove from all context menus
     for menu_type in context_menu_types:
         getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
+    bpy.utils.unregister_class(AssignKeyOperator)
 
 if __name__ == "__main__":
     register()
