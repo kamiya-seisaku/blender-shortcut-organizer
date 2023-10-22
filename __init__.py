@@ -19,19 +19,24 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     bl_idname = "object.shortcut_organizer_popup"
     bl_label = "Shortcut Organizer Popup"
     proposed_keys = bpy.props.StringProperty()
-
+    
     @classmethod
     def poll(cls, context):
         # Always active
         return True
 
     def modal(self, context, event):
+        if event.type == 'TIMER':  # Timer event
+            context.area.tag_redraw()  # Force a redraw of the area to update the UI
+
         if event.type == 'ESC':  # Cancel
             return {'CANCELLED'}
         elif event.type == 'RET':  # Confirm
             return {'FINISHED'}
         
         if event.value == 'PRESS':
+            if self.proposed_keys == "Press key to assign.  Type F11 to finish.":
+                self.proposed_keys = ""
             self.proposed_keys += event.type
             print("User pressed:", event.type)
         else:  # Capture any other key
@@ -40,13 +45,13 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def invoke(self, context, event):
-        context.window_manager.modal_handler_add(self)  # Add this line to initiate the modal operation
+        context.window_manager.modal_handler_add(self)  #Initiate the modal operation
+        self.proposed_keys = "Press key to assign.  Type F11 to finish."
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Press key to assign.  Type F11 to finish.")
-        layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
+        layout.label(text=f"{self.proposed_keys}")  # Display proposed keys
         layout.operator("object.reload_addon", text="Reload Addon")
         layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
@@ -87,9 +92,9 @@ class OBJECT_PT_ShortcutOrganizerPropertyPanel(bpy.types.Panel):
         # layout.label(text="Shortcut Organizer in Property Panel")
         # layout.operator("object.shortcut_organizer_popup", text="Open Shortcut Organizer")
         layout = self.layout
-        layout.label(text="Press key to assign")
+        # layout.label(text="Press key to assign")
         layout.operator("object.reload_addon", text="Reload Addon")
-        layout.operator("object.assign_key", text="Assign")  # Add Assign button
+        # layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
 # Context menu to add Popup
 def add_context_menu(self, context):
