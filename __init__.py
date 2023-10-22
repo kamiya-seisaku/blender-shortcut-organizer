@@ -25,12 +25,27 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
         # Always active
         return True
 
+    def modal(self, context, event):
+        if event.type == 'ESC':  # Cancel
+            return {'CANCELLED'}
+        elif event.type == 'RET':  # Confirm
+            return {'FINISHED'}
+        
+        if event.value == 'PRESS':
+            self.proposed_keys += event.type
+            print("User pressed:", event.type)
+        else:  # Capture any other key
+            self.report({'INFO'}, f"Captured key: {event.type}")
+            return {'RUNNING_MODAL'}
+        return {'PASS_THROUGH'}
+
     def invoke(self, context, event):
+        context.window_manager.modal_handler_add(self)  # Add this line to initiate the modal operation
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Press key to assign")
+        layout.label(text="Press key to assign.  Type F11 to finish.")
         layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
         layout.operator("object.reload_addon", text="Reload Addon")
         layout.operator("object.assign_key", text="Assign")  # Add Assign button
@@ -90,36 +105,26 @@ class ReloadAddonOperator(bpy.types.Operator):
         bpy.ops.preferences.addon_enable(module="blender-shortcut-organizer")
         return {'FINISHED'}
 
-# Registration
-def register():
-    bpy.utils.register_class(ShortcutOrganizer)
-    bpy.utils.register_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
-    bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
-    bpy.utils.register_class(ReloadAddonOperator)
-    # bpy.types.VIEW3D_MT_object_context_menu.append(add_context_menu)
+# Registration/Unregistration
+classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator]
 
-    # Dynamically all from all context menus
+def register():
+    bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
+    
+    for cls in classes:
+       bpy.utils.register_class(cls)
+
+    # Dynamically add from all context menus
     for menu_type in context_menu_types:
         getattr(bpy.types, menu_type, None).append(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
-        # bpy.types.get(menu_type).append(add_context_menu)
-
-    try:
-        bpy.utils.unregister_class(ShortcutOrganizerPopupOperator)
-    except:
-        pass
-    bpy.utils.register_class(ShortcutOrganizerPopupOperator)
-
-    if "AssignKeyOperator" not in dir(bpy.types):
-        bpy.utils.register_class(AssignKeyOperator)
 
 def unregister():
-    bpy.utils.unregister_class(ShortcutOrganizer)
-    bpy.utils.unregister_class(OBJECT_PT_ShortcutOrganizerPropertyPanel)
-    bpy.utils.unregister_class(ReloadAddonOperator)
+    for cls in reversed(classes):
+       bpy.utils.unregister_class(cls)
+
+    # Dynamically remove from all context menus
     for menu_type in context_menu_types:
         getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
-    if "ShortcutOrganizer" in dir(bpy.types):
-        bpy.utils.unregister_class(ShortcutOrganizer)
 
 if __name__ == "__main__":
     register()
