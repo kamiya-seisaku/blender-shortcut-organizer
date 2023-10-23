@@ -1,3 +1,4 @@
+# __init__.py
 # minimum value product features
 #  0 context menu
 #  1 key stroke input
