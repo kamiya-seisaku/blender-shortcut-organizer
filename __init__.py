@@ -1,3 +1,7 @@
+# Mostly stable
+# -Issues
+# -key stroke capture not stable
+# -need icon
 bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
@@ -18,7 +22,7 @@ context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     bl_idname = "object.shortcut_organizer_popup"
     bl_label = "Shortcut Organizer Popup"
-    proposed_keys = bpy.props.StringProperty()
+    key_stroke = bpy.props.StringProperty()
 
     @classmethod
     def poll(cls, context):
@@ -32,7 +36,9 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
             return {'FINISHED'}
         
         if event.value == 'PRESS':
-            self.proposed_keys += event.type
+            if self.key_stroke == "Press key to assign.  Type F11 to finish.":
+                self.key_stroke = ""
+            self.key_stroke += event.type
             print("User pressed:", event.type)
         else:  # Capture any other key
             self.report({'INFO'}, f"Captured key: {event.type}")
@@ -41,14 +47,13 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
 
     def invoke(self, context, event):
         context.window_manager.modal_handler_add(self)  # Add this line to initiate the modal operation
+        self.key_stroke = "Press key to assign.  Type F11 to finish."
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context):
-        layout = self.layout
-        layout.label(text="Press key to assign.  Type F11 to finish.")
-        layout.label(text=f"Proposed keys: {self.proposed_keys}")  # Display proposed keys
-        layout.operator("object.reload_addon", text="Reload Addon")
-        layout.operator("object.assign_key", text="Assign")  # Add Assign button
+        self.layout.label(text=f"key: {self.key_stroke}")  # Display proposed keys
+        # layout.operator("object.reload_addon", text="Reload Addon")
+        self.layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
     def execute(self, context):
         self.report({'INFO'}, "Popup Opened")
