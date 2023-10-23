@@ -28,10 +28,8 @@ else:
     import bpy
 
 # Globals
+classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator]
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
-
-# Initialize state machine
-sm = BlenderAddonStateMachine()
 
 # Popup Window Operator
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
@@ -136,25 +134,34 @@ class ReloadAddonOperator(bpy.types.Operator):
         bpy.ops.preferences.addon_enable(module="blender-shortcut-organizer")
         return {'FINISHED'}
 
-classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator]
+# Initialize state machine
+sm = BlenderAddonStateMachine()
 
 def register():
-    bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
-    
-    for cls in classes:
-       bpy.utils.register_class(cls)
-
-    # Dynamically add from all context menus
-    for menu_type in context_menu_types:
-        getattr(bpy.types, menu_type, None).append(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
+    sm.transition('activate')
+    # Your existing register code here
 
 def unregister():
-    for cls in reversed(classes):
-       bpy.utils.unregister_class(cls)
+    sm.transition('deactivate')
+    # Your existing unregister code here
 
-    # Dynamically remove from all context menus
-    for menu_type in context_menu_types:
-        getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
+# def register():
+#     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
+    
+#     for cls in classes:
+#        bpy.utils.register_class(cls)
+
+#     # Dynamically add from all context menus
+#     for menu_type in context_menu_types:
+#         getattr(bpy.types, menu_type, None).append(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
+
+# def unregister():
+#     for cls in reversed(classes):
+#        bpy.utils.unregister_class(cls)
+
+#     # Dynamically remove from all context menus
+#     for menu_type in context_menu_types:
+#         getattr(bpy.types, menu_type, None).remove(add_context_menu) if getattr(bpy.types, menu_type, None) is not None else None
 
 if __name__ == "__main__":
     register()
