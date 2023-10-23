@@ -1,46 +1,16 @@
-# shortcut_organizer_classes.py
-
 # Imports
-import bpy
+if "bpy" in locals():
+# Registration/Unregistration
+    from .state_machine import BlenderKeyCaptureStateMachine
+    pass
+else:
+    import bpy
 
 # Globals
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
 
-class BlenderKeyCaptureStateMachine:
-    def __init__(self):
-        self.key_strokes = ""
-        self.valid_state_transitions = {
-            'Idle': ['Listening', 'Terminated'],
-            'Listening': ['Paused', 'Processing', 'Idle'],
-            'Paused': ['Listening', 'Idle'],
-            'Processing': ['Listening', 'Idle', 'Error'],
-            'Error': ['Idle'],
-            'Terminated': []
-        }
-        self.state = 'Idle'
-        self.key_strokes = ""
-
-    def transition(self, new_state):
-        # check validness of new_state
-        if not new_state in self.valid_state_transitions(self.state):
-            print(f"Invalid transition from {self.state} to {new_state}")
-            self.state = 'Error'
-            return('Error')
-
-        # continue only for valid new_state
-        if self.state == 'Idle' and new_state == 'Listening':
-            # state is just transitioning to 'Listening'
-            self.state = 'Listening'
-            # Initialize self.key_strokes
-            self.key_strokes = ""
-            return('Listening')
-        else:
-            pass
-    # 
-    def addKeyStroke(self, event):
-        self.key_strokes = event
-
 # Initialize state machine
+# sm = BlenderAddonStateMachine()
 sm = BlenderKeyCaptureStateMachine
 
 # Popup Window Operator
@@ -66,12 +36,8 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
             context.area.tag_redraw()  # Force a redraw of the area to update the UI
 
         if event.type == 'ESC':  # Cancel
-            sm.transition("Terminated")
             return {'CANCELLED'}
-
         elif event.type == 'RET':  # Confirm
-            sm.transition("Terminated")
-            self.proposed_keys = sm.key_strokes
             return {'FINISHED'}
         
         if event.value == 'PRESS':
