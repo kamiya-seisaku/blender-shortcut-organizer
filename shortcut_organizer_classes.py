@@ -1,7 +1,7 @@
 # Imports
 if "bpy" in locals():
 # Registration/Unregistration
-    from .state_machine import BlenderAddonStateMachine
+    from .state_machine import BlenderKeyCaptureStateMachine
     pass
 else:
     import bpy
@@ -10,7 +10,8 @@ else:
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
 
 # Initialize state machine
-sm = BlenderAddonStateMachine()
+# sm = BlenderAddonStateMachine()
+sm = BlenderKeyCaptureStateMachine
 
 # Popup Window Operator
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
