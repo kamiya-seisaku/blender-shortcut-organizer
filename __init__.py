@@ -1,3 +1,8 @@
+# mvp
+#  0 context menu/1 key stroke input/2 conflict check/3 assign
+#   text box not sufficient, need modifiers
+#   looking into nutti's code at https://github.com/nutti/Screencast-Keys
+
 bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
@@ -10,7 +15,10 @@ bl_info = {
     "category": "3D View",
 }
 
-import bpy
+if "bpy" in locals():
+    pass
+else:
+    import bpy
 
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
 
@@ -20,6 +28,13 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
     bl_label = "Shortcut Organizer Popup"
     proposed_keys = bpy.props.StringProperty()
     
+    # Event history.
+    # Format: [time, event_type, modifiers, repeat_count]
+    event_history = []
+    # Operator history.
+    # Format: [time, bl_label, idname_py, addr]
+    operator_history = []
+
     @classmethod
     def poll(cls, context):
         # Always active
@@ -42,7 +57,7 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
         else:  # Capture any other key
             self.report({'INFO'}, f"Captured key: {event.type}")
             return {'RUNNING_MODAL'}
-        return {'PASS_THROUGH'}
+        return {'RUNNING_MODAL'}
 
     def invoke(self, context, event):
         context.window_manager.modal_handler_add(self)  #Initiate the modal operation
@@ -112,6 +127,20 @@ class ReloadAddonOperator(bpy.types.Operator):
 
 # Registration/Unregistration
 classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator]
+
+
+from .state_machine import BlenderAddonStateMachine
+
+# Initialize state machine
+sm = BlenderAddonStateMachine()
+
+def register():
+    sm.transition('activate')
+    # Your existing register code here
+
+def unregister():
+    sm.transition('deactivate')
+    # Your existing unregister code here
 
 def register():
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")
