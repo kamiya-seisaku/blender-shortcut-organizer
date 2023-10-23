@@ -8,6 +8,7 @@ else:
 class BlenderKeyCaptureStateMachine:
     def __init__(self):
         self.state = 'Idle'
+
     def transition(self, new_state):
         valid_transitions = {
             'Idle': ['Listening', 'Terminated'],
@@ -17,20 +18,12 @@ class BlenderKeyCaptureStateMachine:
             'Error': ['Idle'],
             'Terminated': []
         }
-        key_strokes = ""
-        
+
         if new_state in valid_transitions[self.state]:
-            if self.state == 'Idle' & new_state == 'Listening':
-                # initialize key_strokes            
-                self.key_strokes = ""
-                self.state = 'Listening'
+            self.state = new_state
             print(f"Transitioned to {self.state}")
         else:
             print(f"Invalid transition from {self.state} to {new_state}")
-    
-    # 
-    def addKeyStroke(self, event):
-        pass
 
 # # Proposed State Machine Class
 # class BlenderAddonStateMachine:

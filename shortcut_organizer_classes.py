@@ -41,17 +41,10 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
             return {'FINISHED'}
         
         if event.value == 'PRESS':
-            # Initiate listening to key strokes
-            if sm.state == "Idle": 
-                sm.transition("Listening")
-                sm.addKeyStroke(event)
-                self.proposed_keys = sm.key_strokes
-            elif sm.state == "Listening":
-                sm.addKeyStroke(event)
-            captured_keys = sm.get_captured_keys()
-            if captured_keys:
-                self.proposed_keys = captured_keys
-
+            if self.proposed_keys == "Press key to assign.  Type F11 to finish.":
+                self.proposed_keys = ""
+            self.proposed_keys += event.type
+            print("User pressed:", event.type)
         else:  # Capture any other key
             self.report({'INFO'}, f"Captured key: {event.type}")
             return {'RUNNING_MODAL'}
