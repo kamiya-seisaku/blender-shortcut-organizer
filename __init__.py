@@ -1,7 +1,8 @@
 # Mostly stable
 # -Issues
-# -key stroke capture not stable
-# -need icon
+#  -key stroke capture not stable
+#   -look more into screencap code
+#  -need icon
 bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
