@@ -16,8 +16,29 @@ bl_info = {
 }
 
 import bpy
+import tkinter as tk
+
+# Initialize variables
+keystrokes = ""
+modifier = ""
 
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
+
+# Function to handle keystrokes in Tkinter
+def on_key(event):
+    global keystrokes, modifier
+    if event.keysym == 'Escape':
+        root.quit()
+    else:
+        if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 'Alt_L', 'Alt_R']:
+            modifier = event.keysym + "+"
+        else:
+            combined_key = f"{modifier}{event.keysym}"
+            keystrokes += f"{combined_key}, "
+            modifier = ""
+    root.clipboard_clear()
+    root.clipboard_append(keystrokes)
+    root.update()
 
 # Popup Window Operator
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
@@ -57,7 +78,16 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
         self.layout.operator("object.assign_key", text="Assign")  # Add Assign button
 
     def execute(self, context):
-        self.report({'INFO'}, "Popup Opened")
+        global keystrokes
+        # Initialize Tkinter window
+        root = tk.Tk()
+        root.title("Keystroke Captor")
+        root.bind("<Key>", on_key)
+        root.mainloop()
+        
+        self.key_stroke = keystrokes
+
+        # self.report({'INFO'}, "Popup Opened")
         return {'FINISHED'}
 
 # Assign Key Operator
