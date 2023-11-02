@@ -1,0 +1,42 @@
+ *  Executing task: c:\Program Files\Blender Foundation\Blender 3.6\blender.exe --python c:\Users\kazuo\.vscode\extensions\jacqueslucke.blender-development-0.0.18\pythonFiles\launch.py 
+
+Read prefs: "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\config\userpref.blend"
+Reloading external rigs...
+Reloading external metarigs...
+[{'load_dir': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer', 'module_name': 'blender-shortcut-organizer'}]
+ * Serving Flask app 'Blender Server'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:9557
+Press CTRL+C to quit
+Sending: {'type': 'setup', 'blenderPort': 9557, 'debugpyPort': 2406, 'blenderPath': 'c:\\Program Files\\Blender Foundation\\Blender 3.6\\blender.exe', 'scriptsFolder': 'c:\\Program Files\\Blender Foundation\\Blender 3.6\\3.6\\scripts', 'addonPathMappings': [{'src': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer', 'load': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer'}]}
+Waiting for debug client.
+Debug client attached.
+Traceback (most recent call last):
+  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
+    mod = __import__(module_name)
+  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
+    import tkinter as tk
+ModuleNotFoundError: No module named 'tkinter'
+
+Error: Traceback (most recent call last):
+  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
+    mod = __import__(module_name)
+  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
+    import tkinter as tk
+ModuleNotFoundError: No module named 'tkinter'
+
+Traceback (most recent call last):
+  File "c:\Users\kazuo\.vscode\extensions\jacqueslucke.blender-development-0.0.18\pythonFiles\include\blender_vscode\load_addons.py", line 35, in load
+    bpy.ops.preferences.addon_enable(module=module_name)
+  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\bpy\ops.py", line 113, in __call__
+    ret = _op_call(self.idname_py(), None, kw)
+RuntimeError: Error: Traceback (most recent call last):
+  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
+    mod = __import__(module_name)
+  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
+    import tkinter as tk
+ModuleNotFoundError: No module named 'tkinter'
+
+
+Sending: {'type': 'enableFailure', 'addonPath': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer'}

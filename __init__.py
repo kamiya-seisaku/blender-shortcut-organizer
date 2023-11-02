@@ -3,6 +3,10 @@
 #  -key stroke capture not stable
 #   -look more into screencap code
 #  -need icon
+# todo: recent operaions list
+# todo: invite use of keyboard sc
+# todo: operations user frequently use
+
 bl_info = {
     "name": "Blender Shortcut Organizer",
     "author": "kkay",
@@ -17,12 +21,30 @@ bl_info = {
 
 import bpy
 import tkinter as tk
+import subprocess
+import sys
 
 # Initialize variables
 keystrokes = ""
 modifier = ""
 
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
+
+# check for Tkinter availability
+def check_tkinter_availability():
+    try:
+        import tkinter
+        print('Tkinter is available.')
+    except ImportError:
+        print('Tkinter is not available. Installing...')
+        try:
+            subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'tk'])
+            print('Tkinter installed successfully.')
+        except subprocess.CalledProcessError as e:
+            print(f'An error occurred while installing Tkinter: {e}')
+
+# Call the function to check for Tkinter
+check_tkinter_availability()
 
 # Function to handle keystrokes in Tkinter
 def on_key(event):

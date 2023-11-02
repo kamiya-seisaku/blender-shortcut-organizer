@@ -1,47 +1,24 @@
-v  import bpy
-v+ import tkinter as tk
+# Existing code in __init__.py
+# ...
 
-v+ # Initialize variables
-v+ keystrokes = ""
-v+ modifier = ""
+# Add this code to check for Tkinter availability
+import subprocess
+import sys
 
-v+ # Function to handle keystrokes in Tkinter
-  + def on_key(event):
-  +     global keystrokes, modifier
-  +     if event.keysym == 'Escape':
-  +         root.quit()
-  +     else:
-  +         if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 'Alt_L', 'Alt_R']:
-  +             modifier = event.keysym + "+"
-  +         else:
-  +             combined_key = f"{modifier}{event.keysym}"
-  +             keystrokes += f"{combined_key}, "
-  +             modifier = ""
-  +     root.clipboard_clear()
-  +     root.clipboard_append(keystrokes)
-  +     root.update()
+def check_tkinter_availability():
+    try:
+        import tkinter
+        print('Tkinter is available.')
+    except ImportError:
+        print('Tkinter is not available. Installing...')
+        try:
+            subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'tk'])
+            print('Tkinter installed successfully.')
+        except subprocess.CalledProcessError as e:
+            print(f'An error occurred while installing Tkinter: {e}')
 
-v  # Existing Popup Window Operator
-    class ShortcutOrganizerPopupOperator(bpy.types.Operator):
-        bl_idname = "object.shortcut_organizer_popup"
-        bl_label = "Shortcut Organizer Popup"
-        key_stroke = bpy.props.StringProperty()
+# Call the function to check for Tkinter
+check_tkinter_availability()
 
-        @classmethod
-        def poll(cls, context):
-            return True
-
-        def execute(self, context):
-  +         global keystrokes
-  +         # Initialize Tkinter window
-  +         root = tk.Tk()
-  +         root.title("Keystroke Captor")
-  +         root.bind("<Key>", on_key)
-  +         root.mainloop()
-  +         
-            # Your existing code to handle the captured keystrokes
-  +         self.key_stroke = keystrokes
-            # ... (rest of the existing code)
-            return {'FINISHED'}
-
-  # ... (rest of the existing code)
+# Continue with your existing code
+# ...
