@@ -6,6 +6,11 @@
 # todo: recent operaions list
 # todo: invite use of keyboard sc
 # todo: operations user frequently use
+# TODO: Stabilize Keystroke Capture - Address issues with keystroke capture to ensure reliability.
+# TODO: Icon Integration - Add an icon for a more polished UI experience.
+# TODO: Recent Operations List - Implement a feature to track and display recently used operations for quick shortcut assignment.
+# TODO: Invite Use of Keyboard Shortcuts - Encourage users to utilize keyboard shortcuts through in-app prompts and tutorials.
+# TODO: Frequent Operations Usage - Analyze and suggest shortcuts for operations that users frequently use to enhance workflow efficiency.
 
 bl_info = {
     "name": "Blender Shortcut Organizer",
@@ -20,9 +25,9 @@ bl_info = {
 }
 
 import bpy
-import tkinter as tk
-import subprocess
-import sys
+# import tkinter as tk
+# import subprocess
+# import sys
 import keystroke_captor2
 
 # Initialize variables
@@ -31,37 +36,37 @@ modifier = ""
 
 context_menu_types = [menu for menu in dir(bpy.types) if menu.endswith('_context_menu')]
 
-# check for Tkinter availability
-def check_tkinter_availability():
-    try:
-        import tkinter
-        print('Tkinter is available.')
-    except ImportError:
-        print('Tkinter is not available. Installing...')
-        try:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'tk'])
-            print('Tkinter installed successfully.')
-        except subprocess.CalledProcessError as e:
-            print(f'An error occurred while installing Tkinter: {e}')
+# # check for Tkinter availability
+# def check_tkinter_availability():
+#     try:
+#         import tkinter
+#         print('Tkinter is available.')
+#     except ImportError:
+#         print('Tkinter is not available. Installing...')
+#         try:
+#             subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'tk'])
+#             print('Tkinter installed successfully.')
+#         except subprocess.CalledProcessError as e:
+#             print(f'An error occurred while installing Tkinter: {e}')
 
-# Call the function to check for Tkinter
-check_tkinter_availability()
+# # Call the function to check for Tkinter
+# check_tkinter_availability()
 
-# Function to handle keystrokes in Tkinter
-def on_key(event):
-    global keystrokes, modifier
-    if event.keysym == 'Escape':
-        root.quit()
-    else:
-        if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 'Alt_L', 'Alt_R']:
-            modifier = event.keysym + "+"
-        else:
-            combined_key = f"{modifier}{event.keysym}"
-            keystrokes += f"{combined_key}, "
-            modifier = ""
-    root.clipboard_clear()
-    root.clipboard_append(keystrokes)
-    root.update()
+# # Function to handle keystrokes in Tkinter
+# def on_key(event):
+#     global keystrokes, modifier
+#     if event.keysym == 'Escape':
+#         root.quit()
+#     else:
+#         if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 'Alt_L', 'Alt_R']:
+#             modifier = event.keysym + "+"
+#         else:
+#             combined_key = f"{modifier}{event.keysym}"
+#             keystrokes += f"{combined_key}, "
+#             modifier = ""
+#     root.clipboard_clear()
+#     root.clipboard_append(keystrokes)
+#     root.update()
 
 # Popup Window Operator
 class ShortcutOrganizerPopupOperator(bpy.types.Operator):
@@ -102,11 +107,11 @@ class ShortcutOrganizerPopupOperator(bpy.types.Operator):
 
     def execute(self, context):
         global keystrokes
-        # Initialize Tkinter window
-        root = tk.Tk()
-        root.title("Keystroke Captor")
-        root.bind("<Key>", on_key)
-        root.mainloop()
+        # # Initialize Tkinter window
+        # root = tk.Tk()
+        # root.title("Keystroke Captor")
+        # root.bind("<Key>", on_key)
+        # root.mainloop()
         
         self.key_stroke = keystrokes
 
