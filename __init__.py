@@ -23,6 +23,7 @@ import bpy
 import tkinter as tk
 import subprocess
 import sys
+import keystroke_captor2
 
 # Initialize variables
 keystrokes = ""
@@ -163,8 +164,31 @@ class ReloadAddonOperator(bpy.types.Operator):
         bpy.ops.preferences.addon_enable(module="blender-shortcut-organizer")
         return {'FINISHED'}
 
+# New operator to assign a shortcut
+class WM_OT_AssignShortcut(bpy.types.Operator):
+    bl_idname = "wm.assign_shortcut"
+    bl_label = "Assign Shortcut"
+
+    def execute(self, context):
+        # Capture the keystroke using the function from keystroke_captor2
+        keystroke, modifiers = keystroke_captor2.capture_keystroke()
+
+        # Search existing shortcuts (you'll need to implement this)
+        existing = search_shortcuts(keystroke, modifiers)
+
+        if not existing:
+            # Assign the shortcut (you'll need to implement this)
+            assign_shortcut(keystroke, modifiers)
+            self.report({'INFO'}, "Shortcut assigned.")
+        else:
+            # Suggest alternatives (you'll need to implement this)
+            alternatives = suggest_alternatives(keystroke, modifiers)
+            self.report({'INFO'}, f"Shortcut already assigned. Alternatives: {alternatives}")
+
+        return {'FINISHED'}
+
 # Registration/Unregistration
-classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator]
+classes = [ShortcutOrganizer, OBJECT_PT_ShortcutOrganizerPropertyPanel, ReloadAddonOperator, AssignKeyOperator, ShortcutOrganizerPopupOperator, WM_OT_AssignShortcut]
 
 def register():
     bpy.types.Scene.debug_mode = bpy.props.BoolProperty(name="Debug Mode")

@@ -1,42 +1,44 @@
- *  Executing task: c:\Program Files\Blender Foundation\Blender 3.6\blender.exe --python c:\Users\kazuo\.vscode\extensions\jacqueslucke.blender-development-0.0.18\pythonFiles\launch.py 
+  import bpy
+  from bpy.props import StringProperty
 
-Read prefs: "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\config\userpref.blend"
-Reloading external rigs...
-Reloading external metarigs...
-[{'load_dir': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer', 'module_name': 'blender-shortcut-organizer'}]
- * Serving Flask app 'Blender Server'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:9557
-Press CTRL+C to quit
-Sending: {'type': 'setup', 'blenderPort': 9557, 'debugpyPort': 2406, 'blenderPath': 'c:\\Program Files\\Blender Foundation\\Blender 3.6\\blender.exe', 'scriptsFolder': 'c:\\Program Files\\Blender Foundation\\Blender 3.6\\3.6\\scripts', 'addonPathMappings': [{'src': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer', 'load': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer'}]}
-Waiting for debug client.
-Debug client attached.
-Traceback (most recent call last):
-  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
-    mod = __import__(module_name)
-  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
-    import tkinter as tk
-ModuleNotFoundError: No module named 'tkinter'
++ # Import the keystroke captor
++ import keystroke_captor2
 
-Error: Traceback (most recent call last):
-  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
-    mod = __import__(module_name)
-  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
-    import tkinter as tk
-ModuleNotFoundError: No module named 'tkinter'
+  # Existing code for your operators, panels, etc.
 
-Traceback (most recent call last):
-  File "c:\Users\kazuo\.vscode\extensions\jacqueslucke.blender-development-0.0.18\pythonFiles\include\blender_vscode\load_addons.py", line 35, in load
-    bpy.ops.preferences.addon_enable(module=module_name)
-  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\bpy\ops.py", line 113, in __call__
-    ret = _op_call(self.idname_py(), None, kw)
-RuntimeError: Error: Traceback (most recent call last):
-  File "c:\Program Files\Blender Foundation\Blender 3.6\3.6\scripts\modules\addon_utils.py", line 333, in enable
-    mod = __import__(module_name)
-  File "C:\Users\kazuo\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons\blender-shortcut-organizer\__init__.py", line 23, in <module>
-    import tkinter as tk
-ModuleNotFoundError: No module named 'tkinter'
++ # New operator to assign a shortcut
++ class WM_OT_AssignShortcut(bpy.types.Operator):
++     bl_idname = "wm.assign_shortcut"
++     bl_label = "Assign Shortcut"
++ 
++     def execute(self, context):
++         # Capture the keystroke using the function from keystroke_captor2
++         keystroke, modifiers = keystroke_captor2.capture_keystroke()
++ 
++         # Search existing shortcuts (you'll need to implement this)
++         existing = search_shortcuts(keystroke, modifiers)
++ 
++         if not existing:
++             # Assign the shortcut (you'll need to implement this)
++             assign_shortcut(keystroke, modifiers)
++             self.report({'INFO'}, "Shortcut assigned.")
++         else:
++             # Suggest alternatives (you'll need to implement this)
++             alternatives = suggest_alternatives(keystroke, modifiers)
++             self.report({'INFO'}, f"Shortcut already assigned. Alternatives: {alternatives}")
++ 
++         return {'FINISHED'}
 
+  # Existing code for registering and unregistering classes
 
-Sending: {'type': 'enableFailure', 'addonPath': 'c:\\Users\\kazuo\\AppData\\Roaming\\Blender Foundation\\Blender\\3.6\\scripts\\addons\\blender-shortcut-organizer'}
++ # Register the new operator
+  def register():
++     bpy.utils.register_class(WM_OT_AssignShortcut)
+      # ... your existing register code
+
+  def unregister():
++     bpy.utils.unregister_class(WM_OT_AssignShortcut)
+      # ... your existing unregister code
+
+  if __name__ == "__main__":
+      register()
