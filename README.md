@@ -1,3 +1,5 @@
+This project is in progress and very unstable yet.
+
 # Enhanced Keyboard Shortcut Management for Blender
 
 ## Overview
